@@ -1,152 +1,162 @@
-#!name = All-in-One AI 全链路分流插件 (含跳转鉴权)
-#!desc = 涵盖 Apple Intelligence、OpenAI、Claude、Gemini、Meta、Copilot、Cursor、Trae、Grok 及其配套 SSO 跳转验证域名。
-#!author = Custom
-#!icon = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bot.png
-#!select = AI 节点策略, PROXY, 美国节点, AI, 节点选择
-#!date = 2026-11-06
+# ==========================================
+# 0. 通用 AI 鉴权、人机验证与支付风控 (防跳转 IP 不一致)
+# ==========================================
+DOMAIN, challenges.cloudflare.com
+DOMAIN-SUFFIX, auth0.com
+DOMAIN-SUFFIX, arkoselabs.com
+DOMAIN-SUFFIX, funcaptcha.com
+DOMAIN-SUFFIX, intercom.io
+DOMAIN-SUFFIX, intercomcdn.com
+DOMAIN-SUFFIX, stripe.com
+DOMAIN-SUFFIX, stripecdn.com
 
-[General]
-# 确保 Apple PCC 及 Siri 语音高敏感域名在 Fake-IP 模式下直接返回真实 IP
-real-ip = *.apple-relay.apple.com, *.apple-relay.cloudflare.com, *.guzzoni.apple.com, *.smoot.apple.com, *.gspe1-ssl.ls.apple.com, *.configuration.ls.apple.com
+# ==========================================
+# 1. OpenAI ChatGPT (含灰度校验与实时语音)
+# ==========================================
+AND, ((DOMAIN-KEYWORD, chatgpt-async-webps-prod-), (DOMAIN-SUFFIX, webpubsub.azure.com))
+AND, ((DOMAIN-KEYWORD, openaicom-api-), (DOMAIN-SUFFIX, azurefd.net))
+DOMAIN, chatgpt.livekit.cloud
+DOMAIN, host.livekit.cloud
+DOMAIN-SUFFIX, turn.livekit.cloud
+DOMAIN, openai.com.cdn.cloudflare.net
+DOMAIN, openaiapi-site.azureedge.net
+DOMAIN, openaicomproductionae4b.blob.core.windows.net
+DOMAIN, production-openaicom-storage.azureedge.net
+DOMAIN-SUFFIX, chat.com
+DOMAIN-SUFFIX, chatgpt.com
+DOMAIN-SUFFIX, oaistatic.com
+DOMAIN-SUFFIX, oaiusercontent.com
+DOMAIN-SUFFIX, openai.com
+DOMAIN-SUFFIX, sora.com
+DOMAIN-SUFFIX, featuregates.org
+DOMAIN-SUFFIX, statsigapi.net
+DOMAIN-SUFFIX, statsig.com
 
-[Rule]
-# 0. 通用 AI 鉴权、人机验证与支付风控
-DOMAIN, challenges.cloudflare.com, AI 节点策略
-DOMAIN-SUFFIX, auth0.com, AI 节点策略
-DOMAIN-SUFFIX, arkoselabs.com, AI 节点策略
-DOMAIN-SUFFIX, funcaptcha.com, AI 节点策略
-DOMAIN-SUFFIX, intercom.io, AI 节点策略
-DOMAIN-SUFFIX, intercomcdn.com, AI 节点策略
-DOMAIN-SUFFIX, stripe.com, AI 节点策略
-DOMAIN-SUFFIX, stripecdn.com, AI 节点策略
+# ==========================================
+# 2. Apple Intelligence & Siri AI (含地区配置校验)
+# ==========================================
+DOMAIN-SUFFIX, apple-relay.apple.com
+DOMAIN-SUFFIX, apple-relay.fastly-edge.com
+DOMAIN-SUFFIX, apple-relay.cloudflare.com
+DOMAIN-SUFFIX, apple-relay.akamaized.net
+DOMAIN-SUFFIX, apple-relay.mask.apple-dns.net
+DOMAIN-SUFFIX, cp4.cloudflare.com
+DOMAIN-SUFFIX, guzzoni.apple.com
+DOMAIN-SUFFIX, smoot.apple.com
+DOMAIN-SUFFIX, gspe1-ssl.ls.apple.com
+DOMAIN-SUFFIX, configuration.ls.apple.com
+DOMAIN-SUFFIX, gateway.icloud.com
+DOMAIN-SUFFIX, apps.mzstatic.com
+DOMAIN-SUFFIX, aapps.mzstatic.com
 
-# 1. OpenAI ChatGPT
-AND, ((DOMAIN-KEYWORD, chatgpt-async-webps-prod-), (DOMAIN-SUFFIX, webpubsub.azure.com)), AI 节点策略
-AND, ((DOMAIN-KEYWORD, openaicom-api-), (DOMAIN-SUFFIX, azurefd.net)), AI 节点策略
-DOMAIN, chatgpt.livekit.cloud, AI 节点策略
-DOMAIN, host.livekit.cloud, AI 节点策略
-DOMAIN-SUFFIX, turn.livekit.cloud, AI 节点策略
-DOMAIN, openai.com.cdn.cloudflare.net, AI 节点策略
-DOMAIN, openaiapi-site.azureedge.net, AI 节点策略
-DOMAIN, openaicomproductionae4b.blob.core.windows.net, AI 节点策略
-DOMAIN, production-openaicom-storage.azureedge.net, AI 节点策略
-DOMAIN-SUFFIX, chat.com, AI 节点策略
-DOMAIN-SUFFIX, chatgpt.com, AI 节点策略
-DOMAIN-SUFFIX, oaistatic.com, AI 节点策略
-DOMAIN-SUFFIX, oaiusercontent.com, AI 节点策略
-DOMAIN-SUFFIX, openai.com, AI 节点策略
-DOMAIN-SUFFIX, sora.com, AI 节点策略
-DOMAIN-SUFFIX, featuregates.org, AI 节点策略
-DOMAIN-SUFFIX, statsigapi.net, AI 节点策略
-DOMAIN-SUFFIX, statsig.com, AI 节点策略
-
-# 2. Apple Intelligence & Siri AI
-DOMAIN-SUFFIX, apple-relay.apple.com, AI 节点策略
-DOMAIN-SUFFIX, apple-relay.fastly-edge.com, AI 节点策略
-DOMAIN-SUFFIX, apple-relay.cloudflare.com, AI 节点策略
-DOMAIN-SUFFIX, apple-relay.akamaized.net, AI 节点策略
-DOMAIN-SUFFIX, apple-relay.mask.apple-dns.net, AI 节点策略
-DOMAIN-SUFFIX, cp4.cloudflare.com, AI 节点策略
-DOMAIN-SUFFIX, guzzoni.apple.com, AI 节点策略
-DOMAIN-SUFFIX, smoot.apple.com, AI 节点策略
-DOMAIN-SUFFIX, gspe1-ssl.ls.apple.com, AI 节点策略
-DOMAIN-SUFFIX, configuration.ls.apple.com, AI 节点策略
-DOMAIN-SUFFIX, gateway.icloud.com, AI 节点策略
-DOMAIN-SUFFIX, apps.mzstatic.com, AI 节点策略
-DOMAIN-SUFFIX, aapps.mzstatic.com, AI 节点策略
-
+# ==========================================
 # 3. GitHub & Microsoft Copilot (含 GitHub/MS 授权跳转)
-DOMAIN, copilot-proxy.githubusercontent.com, AI 节点策略
-DOMAIN, copilot.microsoft.com, AI 节点策略
-DOMAIN, sydney.bing.com, AI 节点策略
-DOMAIN, edgeservices.bing.com, AI 节点策略
-DOMAIN, login.live.com, AI 节点策略
-DOMAIN, login.microsoftonline.com, AI 节点策略
-DOMAIN-SUFFIX, copilot.cloud.microsoft, AI 节点策略
-DOMAIN-SUFFIX, githubcopilot.com, AI 节点策略
-DOMAIN-SUFFIX, github.com, AI 节点策略
-DOMAIN-SUFFIX, githubassets.com, AI 节点策略
-DOMAIN-SUFFIX, githubusercontent.com, AI 节点策略
-DOMAIN-SUFFIX, bing.com, AI 节点策略
-DOMAIN-SUFFIX, bingapis.com, AI 节点策略
+# ==========================================
+DOMAIN, copilot-proxy.githubusercontent.com
+DOMAIN, copilot.microsoft.com
+DOMAIN, sydney.bing.com
+DOMAIN, edgeservices.bing.com
+DOMAIN, login.live.com
+DOMAIN, login.microsoftonline.com
+DOMAIN-SUFFIX, copilot.cloud.microsoft
+DOMAIN-SUFFIX, githubcopilot.com
+DOMAIN-SUFFIX, github.com
+DOMAIN-SUFFIX, githubassets.com
+DOMAIN-SUFFIX, githubusercontent.com
+DOMAIN-SUFFIX, bing.com
+DOMAIN-SUFFIX, bingapis.com
 
+# ==========================================
 # 4. Google Gemini & NotebookLM (含账号与 Google One 校验)
-DOMAIN, accounts.google.com, AI 节点策略
-DOMAIN, one.google.com, AI 节点策略
-DOMAIN, ogs.google.com, AI 节点策略
-DOMAIN, ai.google.dev, AI 节点策略
-DOMAIN, aida.googleapis.com, AI 节点策略
-DOMAIN, aistudio.google.com, AI 节点策略
-DOMAIN, alkalicore-pa.clients6.google.com, AI 节点策略
-DOMAIN, alkalimakersuite-pa.clients6.google.com, AI 节点策略
-DOMAIN, waa-pa.clients6.google.com, AI 节点策略
-DOMAIN, signaler-pa.clients6.google.com, AI 节点策略
-DOMAIN, people-pa.clients6.google.com, AI 节点策略
-DOMAIN, bard.google.com, AI 节点策略
-DOMAIN, geller-pa.googleapis.com, AI 节点策略
-DOMAIN, generativelanguage.googleapis.com, AI 节点策略
-DOMAIN, makersuite.google.com, AI 节点策略
-DOMAIN, proactivebackend-pa.googleapis.com, AI 节点策略
-DOMAIN-SUFFIX, gemini.google.com, AI 节点策略
-DOMAIN-SUFFIX, deepmind.com, AI 节点策略
-DOMAIN-SUFFIX, deepmind.google, AI 节点策略
-DOMAIN-SUFFIX, generativeai.google, AI 节点策略
-DOMAIN-SUFFIX, notebooklm.google, AI 节点策略
-DOMAIN-SUFFIX, notebooklm.google.com, AI 节点策略
-DOMAIN-SUFFIX, labs.google, AI 节点策略
+# ==========================================
+DOMAIN, accounts.google.com
+DOMAIN, one.google.com
+DOMAIN, ogs.google.com
+DOMAIN, ai.google.dev
+DOMAIN, aida.googleapis.com
+DOMAIN, aistudio.google.com
+DOMAIN, alkalicore-pa.clients6.google.com
+DOMAIN, alkalimakersuite-pa.clients6.google.com
+DOMAIN, waa-pa.clients6.google.com
+DOMAIN, signaler-pa.clients6.google.com
+DOMAIN, people-pa.clients6.google.com
+DOMAIN, bard.google.com
+DOMAIN, geller-pa.googleapis.com
+DOMAIN, generativelanguage.googleapis.com
+DOMAIN, makersuite.google.com
+DOMAIN, proactivebackend-pa.googleapis.com
+DOMAIN-SUFFIX, gemini.google.com
+DOMAIN-SUFFIX, deepmind.com
+DOMAIN-SUFFIX, deepmind.google
+DOMAIN-SUFFIX, generativeai.google
+DOMAIN-SUFFIX, notebooklm.google
+DOMAIN-SUFFIX, notebooklm.google.com
+DOMAIN-SUFFIX, labs.google
 
+# ==========================================
 # 5. Anthropic Claude
-DOMAIN-SUFFIX, anthropic.com, AI 节点策略
-DOMAIN-SUFFIX, claude.ai, AI 节点策略
-DOMAIN-SUFFIX, claude.com, AI 节点策略
-DOMAIN-SUFFIX, clau.de, AI 节点策略
-DOMAIN-SUFFIX, claudeusercontent.com, AI 节点策略
-DOMAIN-SUFFIX, usefathom.com, AI 节点策略
-IP-CIDR, 160.79.104.0/23, AI 节点策略, no-resolve
-IP-CIDR6, 2607:6bc0::/48, AI 节点策略, no-resolve
+# ==========================================
+DOMAIN-SUFFIX, anthropic.com
+DOMAIN-SUFFIX, claude.ai
+DOMAIN-SUFFIX, claude.com
+DOMAIN-SUFFIX, clau.de
+DOMAIN-SUFFIX, claudeusercontent.com
+DOMAIN-SUFFIX, usefathom.com
+IP-CIDR, 160.79.104.0/23, no-resolve
+IP-CIDR6, 2607:6bc0::/48, no-resolve
 
-# 6. JetBrains AI
-DOMAIN, account.jetbrains.com, AI 节点策略
-DOMAIN-SUFFIX, grazie.ai, AI 节点策略
-DOMAIN-SUFFIX, grazie.aws.intellij.net, AI 节点策略
-DOMAIN-SUFFIX, jetbrains.ai, AI 节点策略
+# ==========================================
+# 6. JetBrains AI (含 JB Account 授权验证)
+# ==========================================
+DOMAIN, account.jetbrains.com
+DOMAIN-SUFFIX, grazie.ai
+DOMAIN-SUFFIX, grazie.aws.intellij.net
+DOMAIN-SUFFIX, jetbrains.ai
 
+# ==========================================
 # 7. Cursor & Trae AI (含 WorkOS 及字节海外 SSO 验证)
-DOMAIN-SUFFIX, cursor.com, AI 节点策略
-DOMAIN-SUFFIX, cursor.sh, AI 节点策略
-DOMAIN-SUFFIX, cursorapi.com, AI 节点策略
-DOMAIN-SUFFIX, cursor-cdn.com, AI 节点策略
-DOMAIN-SUFFIX, workos.com, AI 节点策略
-DOMAIN-SUFFIX, authkit.app, AI 节点策略
-DOMAIN, trae-api-sg.mchost.guru, AI 节点策略
-DOMAIN-SUFFIX, trae.ai, AI 节点策略
-DOMAIN-SUFFIX, marscode.com, AI 节点策略
-DOMAIN-SUFFIX, byteoversea.com, AI 节点策略
-DOMAIN-SUFFIX, ibytedtos.com, AI 节点策略
-DOMAIN-SUFFIX, sgsnssdk.com, AI 节点策略
+# ==========================================
+DOMAIN-SUFFIX, cursor.com
+DOMAIN-SUFFIX, cursor.sh
+DOMAIN-SUFFIX, cursorapi.com
+DOMAIN-SUFFIX, cursor-cdn.com
+DOMAIN-SUFFIX, workos.com
+DOMAIN-SUFFIX, authkit.app
+DOMAIN, trae-api-sg.mchost.guru
+DOMAIN-SUFFIX, trae.ai
+DOMAIN-SUFFIX, marscode.com
+DOMAIN-SUFFIX, byteoversea.com
+DOMAIN-SUFFIX, ibytedtos.com
+DOMAIN-SUFFIX, sgsnssdk.com
 
+# ==========================================
 # 8. Meta AI & Muse (含 Ins/FB 跳转验证)
-DOMAIN-SUFFIX, meta.ai, AI 节点策略
-DOMAIN-SUFFIX, meta.com, AI 节点策略
-DOMAIN-KEYWORD, muse.ai, AI 节点策略
-DOMAIN-SUFFIX, instagram.com, AI 节点策略
-DOMAIN-SUFFIX, cdninstagram.com, AI 节点策略
-DOMAIN-SUFFIX, facebook.com, AI 节点策略
-DOMAIN-SUFFIX, facebook.net, AI 节点策略
-DOMAIN-SUFFIX, fbcdn.net, AI 节点策略
-DOMAIN-SUFFIX, fbsbx.com, AI 节点策略
-DOMAIN-SUFFIX, accountkit.com, AI 节点策略
+# ==========================================
+DOMAIN-SUFFIX, meta.ai
+DOMAIN-SUFFIX, meta.com
+DOMAIN-KEYWORD, muse.ai
+DOMAIN-SUFFIX, instagram.com
+DOMAIN-SUFFIX, cdninstagram.com
+DOMAIN-SUFFIX, facebook.com
+DOMAIN-SUFFIX, facebook.net
+DOMAIN-SUFFIX, fbcdn.net
+DOMAIN-SUFFIX, fbsbx.com
+DOMAIN-SUFFIX, accountkit.com
 
+# ==========================================
 # 9. Grok AI (含 X/Twitter 跳转授权与订阅验证)
-DOMAIN-SUFFIX, x.ai, AI 节点策略
-DOMAIN-SUFFIX, grok.com, AI 节点策略
-DOMAIN-SUFFIX, x.com, AI 节点策略
-DOMAIN-SUFFIX, twitter.com, AI 节点策略
-DOMAIN-SUFFIX, twimg.com, AI 节点策略
-DOMAIN-SUFFIX, t.co, AI 节点策略
+# ==========================================
+DOMAIN-SUFFIX, x.ai
+DOMAIN-SUFFIX, grok.com
+DOMAIN-SUFFIX, x.com
+DOMAIN-SUFFIX, twitter.com
+DOMAIN-SUFFIX, twimg.com
+DOMAIN-SUFFIX, t.co
 
+# ==========================================
 # 10. Perplexity & Mistral AI
-DOMAIN-SUFFIX, pplx.ai, AI 节点策略
-DOMAIN-SUFFIX, perplexity.ai, AI 节点策略
-DOMAIN-SUFFIX, perplexity.com, AI 节点策略
-DOMAIN-SUFFIX, mistral.ai, AI 节点策略
+# ==========================================
+DOMAIN-SUFFIX, pplx.ai
+DOMAIN-SUFFIX, perplexity.ai
+DOMAIN-SUFFIX, perplexity.com
+DOMAIN-SUFFIX, mistral.ai
